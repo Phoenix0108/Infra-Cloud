@@ -214,3 +214,16 @@ Links             : {}
 ParsedHtml        : mshtml.HTMLDocumentClass
 RawContentLength  : 951
 ```
+
+- Custom de nginx
+
+Création du docker :
+
+```bash
+$ docker run --name meow -d -v /home/admin01/html:/usr/share/nginx/html -p 9999:80 nginx
+99109f1ec6891ea683129d1e709d6034f3595fc41ffff5b607a27bca9cffa751
+
+# Acces au docker
+
+$ docker exec -it meow /bin/sh
+```

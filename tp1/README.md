@@ -2,7 +2,7 @@
 
 ## Partie 1 :
 
-### Instalation de Docker sur Ubuntu
+### 🌞 Instalation de Docker sur Ubuntu
 
 Quoi ? Tu veux instaler docker et tu ne sais pas comment faire !!!!!
 
@@ -86,89 +86,131 @@ Et je crée l'utilisateur demandé :
 $ sudo usermod -aG docker $(whoami)
 ```
 
-### Vérification de l'installation
-
-Je préviens : le copier coller va être aussi violent qu'un Américain qui trouve du pétrole au moyen orient.
+### Vérification de l'installation (cette partie est pour moi. Aucun résultat de commande n'est présent.)
 
 - `docker info`
 
 ```bash
+# Info sur l'install actuelle de Docker
 $ docker info
-Client: Docker Engine - Community
-Version:    28.0.4
-Context:    default
-Debug Mode: false
-Plugins:
- buildx: Docker Buildx (Docker Inc.)
-   Version:  v0.22.0
-   Path:     /usr/libexec/docker/cli-plugins/docker-buildx
- compose: Docker Compose (Docker Inc.)
-   Version:  v2.34.0
-   Path:     /usr/libexec/docker/cli-plugins/docker-compose
 
-Server:
-Containers: 1
- Running: 0
- Paused: 0
- Stopped: 1
-Images: 1
-Server Version: 28.0.4
-Storage Driver: overlay2
- Backing Filesystem: extfs
- Supports d_type: true
- Using metacopy: false
- Native Overlay Diff: false
- userxattr: false
-Logging Driver: json-file
-Cgroup Driver: systemd
-Cgroup Version: 2
-Plugins:
- Volume: local
- Network: bridge host ipvlan macvlan null overlay
- Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
-Swarm: inactive
-Runtimes: runc io.containerd.runc.v2
-Default Runtime: runc
-Init Binary: docker-init
-containerd version: 753481ec61c7c8955a23d6ff7bc8e4daed455734
-runc version: v1.2.5-0-g59923ef
-init version: de40ad0
-Security Options:
- apparmor
- seccomp
-  Profile: builtin
- cgroupns
-Kernel Version: 6.8.0-1021-azure
-Operating System: Ubuntu 24.04.2 LTS
-OSType: linux
-Architecture: x86_64
-CPUs: 1
-Total Memory: 892.9MiB
-Name: VM1
-ID: 9675ee65-9ec7-4da3-b88e-5181dede2f6e
-Docker Root Dir: /var/lib/docker
-Debug Mode: false
-Experimental: false
-Insecure Registries:
- ::1/128
- 127.0.0.0/8
-Live Restore Enabled: false
-```
-
-- `docker ps`
-
-```bash
+# Liste des conteneurs actifs
 $ docker ps
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+# Liste de tous les conteneurs
+$ docker ps -a
+
+# Liste des images disponibles localement
+$ docker images
+
+# Lancer un conteneur debian
+$ docker run debian
+
+# -d sert à mettre un conteneur en tâche de fond (-d pour daemon)
+$ docker run -d debian sleep 99999
+
+# à l'inverse, -it sert à avoir un shell interactif (incompatible avec -d)
+$ docker run -it debian bash
+
+# Consulter les logs d'un conteneur
+$ docker ps # on repère l'ID/le nom du conteneur voulu
+$ docker logs <ID_OR_NAME>
+$ docker logs -f <ID_OR_NAME> # suit l'arrivée des logs en temps réel
+
+# Exécuter un processus dans un conteneur actif
+$ docker ps # on repère l'ID/le nom du conteneur voulu
+$ docker exec <ID_OR_NAME> <COMMAND>
+$ docker exec <ID_OR_NAME> ls
+$ docker exec -it <ID_OR_NAME> bash # permet de récupérer un shell bash dans le conteneur ciblé
+
+# supprimer un conteneur donné
+$ docker rm <ID_OR_NAME>
+# supprimer un conteneur donné, même s'il est allumé
+$ docker rm -f <ID_OR_NAME>
+
+$ docker --help
+$ docker run --help
+$ man docker
+
 ```
 
-Iln'y a rien car rien n'est actif.
+### 🌞 Lancement de conteneurs
 
-- `docker ps -a`
+- Les commandes de bases :
 
 ```bash
-$ docker ps -a
-CONTAINER ID   IMAGE         COMMAND    CREATED          STATUS                      PORTS     NAMES
-3a886b8e64d3   hello-world   "/hello"   52 seconds ago   Exited (0) 50 seconds ago             wizardly_einstein
-fa4780704fb9   hello-world   "/hello"   16 minutes ago   Exited (0) 16 minutes ago             jovial_cray
+# L'option --name permet de définir un nom pour le conteneur
+$ docker run --name web nginx
+
+# L'option -d permet de lancer un conteneur en tâche de fond
+$ docker run --name web -d nginx
+
+# L'option -v permet de partager un dossier/un fichier entre l'hôte et le conteneur
+$ docker run --name web -d -v /path/to/html:/usr/share/nginx/html nginx
+
+# L'option -p permet de partager un port entre l'hôte et le conteneur
+$ docker run --name web -d -v /path/to/html:/usr/share/nginx/html -p 8888:80 nginx
+# Dans l'exemple ci-dessus, le port 8888 de l'hôte est partagé vers le port 80 du conteneur
+
+```
+
+- Utiliser la commande docker run
+
+```bash
+$ docker run --name web -d -v /home/admin01/html:/usr/share/nginx/html -p 9999:80 nginx
+Unable to find image 'nginx:latest' locally
+latest: Pulling from library/nginx
+6e909acdb790: Pull complete
+5eaa34f5b9c2: Pull complete
+417c4bccf534: Pull complete
+e7e0ca015e55: Pull complete
+373fe654e984: Pull complete
+97f5c0f51d43: Pull complete
+c22eb46e871a: Pull complete
+Digest: sha256:124b44bfc9ccd1f3cedf4b592d4d1e8bddb78b51ec2ed5056c52d3692baebc19
+Status: Downloaded newer image for nginx:latest
+4f6971adf7e3b38cc890dfa266344b7601b33fdaf8c32a1f97177fb6c4ef1c69
+```
+
+Avec cette commande, je redirige le port 9999 vers le port 80 du conteneur.
+
+J'ai du créer une rêgle sur le parefeu Azure pour autoriser le trafique vers ce port.
+
+- Caractéristique de la règle parefeu
+
+```
+- Port : 9999
+- Source : Any
+- Destination : by default
+```
+
+- Résultat du curl (ma machine)
+
+```bash
+ curl http://108.143.166.187:9999
+
+StatusCode        : 200
+StatusDescription : OK
+Content           : <!DOCTYPE html>
+                    <html lang="fr">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Guerre Rouge - Destiny 2</title>
+                        <style>
+                      ...
+RawContent        : HTTP/1.1 200 OK
+                    Connection: keep-alive
+                    Accept-Ranges: bytes
+                    Content-Length: 951
+                    Content-Type: text/html
+                    Date: Mon, 31 Mar 2025 10:01:24 GMT
+                    ETag: "67ea67db-3b7"
+                    Last-Modified: Mon, 31 Mar 2025 ...
+Forms             : {}
+Headers           : {[Connection, keep-alive], [Accept-Ranges, bytes], [Content-Length, 951], [Content-Type, text/html]...}
+Images            : {}
+InputFields       : {}
+Links             : {}
+ParsedHtml        : mshtml.HTMLDocumentClass
+RawContentLength  : 951
 ```

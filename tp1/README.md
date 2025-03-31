@@ -10,7 +10,7 @@ Et bah tu sais quoi ?
 
 #### RTFM
 
-Plus sérieusement il faut suivre la documentation. Les commandes nécéssaires pour installer sont ci-dessous :
+Plus sérieusement il faut suivre la documentation. Les commandes nécéssaires pour installer sous ubuntu sont ci-dessous :
 
 - APT repositories :
 
@@ -235,4 +235,118 @@ server {
 }
 ```
 
-Le reste, a toi de voir
+## 🌞 Partie 2 : Dockerfile time !
+
+La création du dockerfile prendra une image ubuntu. Pourquoi changer en cour de route ?
+
+-`Dockerfile`
+
+```Dockerfile
+FROM ubuntu
+
+RUN apt-get update -y && apt-get install apache2 -y
+
+# Cette ligne me permet d'éviter une érreur
+
+RUN mkdir -p /etc/apache2/logs /var/log/apache2
+
+COPY ./index.html /var/www/html
+
+COPY ./apache2.conf /etc/apache2/apache2.conf
+
+# Cette ligne me permet d'éviter une érreur
+
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+EXPOSE 80
+
+CMD ["apache2ctl", "-D", "FOREGROUND"]
+```
+
+## Partie 3 : doker-compose
+
+### WikiJS
+
+Le plus gros copier coller du monde :
+
+```yml
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_PASSWORD: wikijsrocks
+      POSTGRES_USER: wikijs
+    logging:
+      driver: none
+    restart: unless-stopped
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  wiki:
+    image: ghcr.io/requarks/wiki:2
+    depends_on:
+      - db
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: wikijsrocks
+      DB_NAME: wiki
+    restart: unless-stopped
+    ports:
+      - "80:3000"
+
+volumes:
+  db-data:
+```
+
+`docker-compose up` pour lancer.
+
+### APP python
+
+Pour up l'app python, il faut un `Dockerfile` et un `docker-compose`
+
+- `Dockerfile`
+
+```Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY ./theapp /app
+
+RUN pip install -r requirements.txt
+
+EXPOSE 8888
+
+CMD ["python", "app.py"]
+```
+
+- `docker-compose`
+
+```yml
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: meow_py
+    ports:
+      - "8888:8888"
+    depends_on:
+      - db
+    environment:
+      - REDIS_HOST=db
+      - REDIS_PORT=6379
+
+  db:
+    image: redis:latest
+    container_name: redis_db
+    restart: always
+```
+
+Voila tout pour la partie 3
+
+## Partie 4 : Docker security

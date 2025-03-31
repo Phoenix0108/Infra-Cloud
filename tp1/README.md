@@ -220,10 +220,19 @@ RawContentLength  : 951
 Création du docker :
 
 ```bash
-$ docker run --name meow -d -v /home/admin01/html:/usr/share/nginx/html -p 9999:80 nginx
-99109f1ec6891ea683129d1e709d6034f3595fc41ffff5b607a27bca9cffa751
+$ docker run --name meow -d -v /home/admin01/html:/usr/share/nginx/html -v /home/admin01/nginx.conf:/etc/nginx/conf.d/default.conf -p 7777:7777 nginx
 
-# Acces au docker
-
-$ docker exec -it meow /bin/sh
 ```
+
+- fichier de configuration nginx
+
+```bash
+server {
+
+  listen 7777;
+
+  root /usr/share/nginx/html;
+}
+```
+
+Le reste, a toi de voir

@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - default
+  - name: admin01
+    sudo: false
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEkhnTET54sW84mfxsiXHbI8m0MBcOFMWxha3kJyfEDD yanis@Sec-Phoenix-PC

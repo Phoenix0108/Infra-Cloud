@@ -840,3 +840,7 @@ PING 10.0.2.4 (10.0.2.4) 56(84) bytes of data.
 4 packets transmitted, 4 received, 0% packet loss, time 3004ms
 rtt min/avg/max/mdev = 1.200/1.465/2.086/0.362 ms
 ```
+
+## Cloud-init time
+
+![kirby-abyss]()

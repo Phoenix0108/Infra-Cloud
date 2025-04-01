@@ -2,7 +2,18 @@
 users:
   - default
   - name: admin01
-    sudo: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
+    passwd: 'gJ22rgT4#Admin01#'  # Use password directly for simplicity
     ssh_authorized_keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEkhnTET54sW84mfxsiXHbI8m0MBcOFMWxha3kJyfEDD yanis@Sec-Phoenix-PC
+
+package_update: true
+package_upgrade: true
+
+runcmd:
+  - curl -fsSL https://get.docker.com |sh
+  - docker pull alpine:latest
+  - usermod -aG docker admin01 
+  - systemctl enable docker    
+  - systemctl start docker     

@@ -154,4 +154,104 @@ rtt min/avg/max/mdev = 2.216/2.458/2.966/0.281 ms
 
 Ah et en référence a l'anomalie de cette partie : "c"
 
-## Partie 2 :
+## Partie 2 : le cloud-init
+
+### GOOOOOOOOOOOOOOO
+
+It's time for the `cloud-init.txt`
+
+```txt
+#cloud-config
+users:
+  - default
+  - name: admin01
+    sudo: false
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEkhnTET54sW84mfxsiXHbI8m0MBcOFMWxha3kJyfEDD yanis@Sec-Phoenix-PC
+
+```
+
+La commande pour créer la machine :
+
+```bash
+$ az vm create --name VM3 --resource-group TP2 --location westeurope --image Ubuntu2204 --size Standard_B1s --custom-data "G:\Mon Drive\EFREI\B2\Doc\Gérer parc informatique cloud\Infra-Cloud\tp2\cloud-init.txt" --ssh-key-value .\.ssh\admin01Azure.pub --admin-username admin01
+```
+
+Et ça marche :
+
+```bash
+$ ssh -i .\.ssh\admin01Azure admin01@20.229.147.255
+The authenticity of host '20.229.147.255 (20.229.147.255)' can't be established.
+ED25519 key fingerprint is SHA256:imrUMvtcS/rzrIkefFjiCZTZqAktWjV5gtPjYBlkJLY.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '20.229.147.255' (ED25519) to the list of known hosts.
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 6.8.0-1021-azure x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Apr  1 10:03:28 UTC 2025
+
+  System load:  0.12              Processes:             105
+  Usage of /:   5.2% of 28.89GB   Users logged in:       0
+  Memory usage: 31%               IPv4 address for eth0: 10.0.0.6
+  Swap usage:   0%
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+admin01@VM3:~$
+```
+
+### Init-config personnaliser
+
+```txt
+#cloud-config
+users:
+  - default
+  - name: admin01
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    passwd: 'gJ22rgT4#Admin01#'  # Use password directly for simplicity
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEkhnTET54sW84mfxsiXHbI8m0MBcOFMWxha3kJyfEDD yanis@Sec-Phoenix-PC
+
+package_update: true
+package_upgrade: true
+
+runcmd:
+  - curl -fsSL https://get.docker.com |sh
+  - docker pull alpine:latest
+```
+
+Et ça marche
+
+```bash
+$ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+alpine       latest    aded1e1a5b37   6 weeks ago   7.83MB
+```
+
+## Partie 3 : Terraform (Chiant l'install)

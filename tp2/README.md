@@ -843,4 +843,4 @@ rtt min/avg/max/mdev = 1.200/1.465/2.086/0.362 ms
 
 ## Cloud-init time
 
-![kirby-abyss]()
+![kirby-abyss](https://github.com/Phoenix0108/Infra-Cloud/blob/3c518e72d3295991f6cde5f8da78740224e6f4c2/tp2/kirby-abyss.gif)

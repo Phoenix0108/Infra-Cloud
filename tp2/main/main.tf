@@ -77,7 +77,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   ]
   admin_ssh_key {
     username   = "admin01"
-    public_key = file("<CHEMIN_VERS_TA_CLE_PUBLIQUE>")
+    public_key = file("C:/Users/yanis/.ssh/admin01Azure.pub")
   }
   source_image_reference {
     publisher = "Canonical"

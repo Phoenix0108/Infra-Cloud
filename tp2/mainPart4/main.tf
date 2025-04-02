@@ -1,6 +1,6 @@
 provider "azurerm" {
   features {}
-  subscription_id = "<68ecb9c5-f292-4d86-a129-3ac49e94f287>"
+  subscription_id = "Ouais ouais mais non du coup mdrrrrr"
 }
 
 resource "azurerm_resource_group" "main" {
@@ -91,7 +91,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   admin_ssh_key {
     username   = "admin01"
-    public_key = file("C:/Users/yanis/.ssh/admin01Azure.pub")
+    public_key = file("C:/Users/admin01/.ssh/admin01Azure.pub")
   }
 
   source_image_reference {

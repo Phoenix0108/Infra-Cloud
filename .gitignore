@@ -1,0 +1,8 @@
+tp3/main.tf
+tp3/terraform.tfstate
+tp3/.terraform.lock.hcl
+tp3/cloud-init.txt
+tp3/variable.tf
+tp3/.terraform/providers/registry.terraform.io/hashicorp/azurerm/4.25.0/windows_amd64/LICENSE.txt
+tp3/.terraform/providers/registry.terraform.io/hashicorp/azurerm/4.25.0/windows_amd64/terraform-provider-azurerm_v4.25.0_x5.exe
+tp3/terraform.tfstate.backup

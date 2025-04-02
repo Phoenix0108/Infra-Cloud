@@ -587,7 +587,7 @@ az group list
 
 - `main.tf`
 
-```terraform
+```
 
 provider "azurerm" {
   features {}
@@ -711,7 +711,7 @@ resource "azurerm_linux_virtual_machine" "node1" {
 
   admin_ssh_key {
     username   = "admin01"
-    public_key = file("C:/Users/yanis/.ssh/admin01Azure.pub")
+    public_key = file("C:/Users/admin01/.ssh/admin01Azure.pub")
   }
 
   source_image_reference {
@@ -738,7 +738,7 @@ resource "azurerm_linux_virtual_machine" "node2" {
 
   admin_ssh_key {
     username   = "admin01"
-    public_key = file("C:/Users/yanis/.ssh/admin01Azure.pub")
+    public_key = file("C:/Users/admin01/.ssh/admin01Azure.pub")
   }
 
   source_image_reference {
